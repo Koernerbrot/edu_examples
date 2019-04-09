@@ -19,7 +19,7 @@ boolean option_avoid = true;
 boolean option_noise = true;
 boolean option_cohese = true;
 
-// gui crap
+// GUI
 int messageTimer = 0;
 String messageText = "";
 
@@ -29,17 +29,18 @@ void setup () {
   recalculateConstants();
   boids = new ArrayList<Boid>();
   avoids = new ArrayList<Avoid>();
+
   for (int x = 100; x < width - 100; x+= 100) {
     for (int y = 100; y < height - 100; y+= 100) {
- //   boids.add(new Boid(x + random(3), y + random(3)));
-  //    boids.add(new Boid(x + random(3), y + random(3)));
+//   add initial amount of boids here if desired  
+//   boids.add(new Boid(x + random(3), y + random(3)));
+//   boids.add(new Boid(x + random(3), y + random(3)));
     }
   }
   
   setupWalls();
 }
 
-// haha
 void recalculateConstants () {
   maxSpeed = 2.1 * globalScale;
   friendRadius = 60 * globalScale;
@@ -47,7 +48,6 @@ void recalculateConstants () {
   avoidRadius = 90 * globalScale;
   coheseRadius = friendRadius;
 }
-
 
 void setupWalls() {
   avoids = new ArrayList<Avoid>();
@@ -65,18 +65,16 @@ void setupCircle() {
   } 
 }
 
-
 void draw () {
   noStroke();
   colorMode(HSB);
   fill(0, 100);
   rect(0, 0, width, height);
 
-
   if (tool == "erase") {
     noFill();
     stroke(0, 100, 260);
-    rect(mouseX - eraseRadius, mouseY - eraseRadius, eraseRadius * 2, eraseRadius *2);
+    rect(mouseX - eraseRadius, mouseY - eraseRadius, eraseRadius * 2, eraseRadius * 2);
     if (mousePressed) {
       erase();
     }
@@ -85,13 +83,13 @@ void draw () {
     fill(0, 200, 200);
     ellipse(mouseX, mouseY, 15, 15);
   }
-  for (int i = 0; i <boids.size(); i++) {
+  for (int i = 0; i < boids.size(); i++) {
     Boid current = boids.get(i);
     current.go();
     current.draw();
   }
 
-  for (int i = 0; i <avoids.size(); i++) {
+  for (int i = 0; i < avoids.size(); i++) {
     Avoid current = avoids.get(i);
     current.go();
     current.draw();
@@ -145,8 +143,7 @@ void keyPressed () {
 
 void drawGUI() {
    if(messageTimer > 0) {
-     fill((min(30, messageTimer) / 30.0) * 255.0);
-
+    fill((min(30, messageTimer) / 30.0) * 255.0);
     text(messageText, 10, height - 20); 
    }
 }
@@ -208,7 +205,7 @@ class Avoid {
    }
    
    void go () {
-     
+     // empty method
    }
    
    void draw () {
@@ -218,6 +215,7 @@ class Avoid {
 }
 
 class Boid {
+
   // main fields
   PVector pos;
   PVector move;
@@ -323,16 +321,13 @@ class Boid {
 
     for (Boid other : friends) {
       float d = PVector.dist(pos, other.pos);
-      // If the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)
+      // if the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)
       if ((d > 0) && (d < friendRadius)) {
         PVector copy = other.move.copy();
         copy.normalize();
         copy.div(d); 
         sum.add(copy);
         count++;
-      }
-      if (count > 0) {
-        //sum.div((float)count);
       }
     }
     return sum;
@@ -344,7 +339,7 @@ class Boid {
 
     for (Boid other : friends) {
       float d = PVector.dist(pos, other.pos);
-      // If the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)
+      // if the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)
       if ((d > 0) && (d < crowdRadius)) {
         // Calculate vector pointing away from neighbor
         PVector diff = PVector.sub(pos, other.pos);
@@ -353,9 +348,6 @@ class Boid {
         steer.add(diff);
         count++;            // Keep track of how many
       }
-    }
-    if (count > 0) {
-      //steer.div((float) count);
     }
     return steer;
   }
@@ -366,9 +358,9 @@ class Boid {
 
     for (Avoid other : avoids) {
       float d = PVector.dist(pos, other.pos);
-      // If the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)
+      // if the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)
       if ((d > 0) && (d < avoidRadius)) {
-        // Calculate vector pointing away from neighbor
+        // calculate vector pointing away from neighbor
         PVector diff = PVector.sub(pos, other.pos);
         diff.normalize();
         diff.div(d);        // Weight by distance
